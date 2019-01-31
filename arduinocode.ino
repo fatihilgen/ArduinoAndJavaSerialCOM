@@ -1,27 +1,76 @@
-int trigPin = 8; /* Sensorun trig pini Arduinonun 6 numaralı ayağına bağlandı */
-int echoPin = 9;  /* Sensorun echo pini Arduinonun 7 numaralı ayağına bağlandı */
 
-long sure;
-long uzaklik;
+ 
 
-void setup(){
-  pinMode(trigPin, OUTPUT); /* trig pini çıkış olarak ayarlandı */
-  pinMode(echoPin,INPUT); /* echo pini giriş olarak ayarlandı */
-  Serial.begin(9600); /* Seri haberlesme baslatildi */
+//////////////pinler//////////
+////////Portlar//////////////////
+int ileri = 2;
+int geri  = 3;
+int sag   = 4;
+int sol   = 5;
+
+
+
+
+int bt1 = 2;
+int bt0 = 3;
+////////////////////////////////////////////
+int bt0Value = 0;
+int bt1Value = 1;
+int sayi = 0;
+
+void setup() {
+  pinMode(ileri, OUTPUT);
+  pinMode(geri, OUTPUT);
+  pinMode(sag, OUTPUT);
+  pinMode(sol, OUTPUT);
+  Serial.begin(9600);
 }
-void loop()
-{
-  digitalWrite(trigPin, LOW); /* sensör pasif hale getirildi */
-  delayMicroseconds(5);
-  digitalWrite(trigPin, HIGH); /* Sensore ses dalgasının üretmesi için emir verildi */
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);  /* Yeni dalgaların üretilmemesi için trig pini LOW konumuna getirildi */ 
-  sure = pulseIn(echoPin, HIGH); /* ses dalgasının geri dönmesi için geçen sure ölçülüyor */
-  uzaklik= sure /29.1/2; /* ölçülen sure uzaklığa çevriliyor */            
-  if(uzaklik > 200)
-    uzaklik = 200;
-  Serial.print("Uzaklik ");  
-  Serial.print(uzaklik); /* hesaplanan uzaklık bilgisayara aktarılıyor */
-  Serial.println(" CM olarak olculmustur.");  
-  delay(500); 
-}
+
+void loop() {
+  
+  bt0Value = digitalRead(bt0);
+  bt1Value = digitalRead(bt1);
+    
+  if (Serial.available() > 0) {
+    sayi = Serial.read();
+  
+    if(sayi==1){
+      digitalWrite(ileri, HIGH);
+    }
+     if(sayi==2){
+      digitalWrite(ileri, LOW);
+    }
+
+    
+     if(sayi==3){
+      digitalWrite(geri, HIGH);
+    }
+     if(sayi==4){
+      digitalWrite(geri,LOW);
+    }
+
+
+    
+     if(sayi==5){
+      digitalWrite(sag, HIGH);
+    }
+     if(sayi==6){
+      digitalWrite(sag, LOW);
+    }
+
+    
+     if(sayi==7){
+      digitalWrite(sol, HIGH);
+    }
+     if(sayi==8){
+      digitalWrite(sol, LOW);
+    }
+    
+    
+  
+  }
+ 
+  Serial.write(bt0Value);            //write as byte, to USB
+  Serial.write(bt1Value);            //write as byte, to USB
+  delay(100);
+ }
